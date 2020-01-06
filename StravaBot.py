@@ -7,6 +7,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 
 LOAD_TIME_SEC = 3
+DELAY_AFTER_KUDOS_SEC = 3  # Helps to avoid sending too many requests at once
 
 # Configure constants here
 EMAIL = ''
@@ -200,11 +201,14 @@ def NavigateToPageAndGiveKudos(browser, url, number_of_pages):
     # kudos_buttons = browser.find_elements_by_class_name("js-add-kudo")
     kudos_buttons = browser.find_elements_by_xpath("//button[contains(@class, 'btn-kudo') and contains(@class, 'js-add-kudo')]")
 
+    print "Number of Buttons to Click: " + str(len(kudos_buttons))
+
     for kudos_button in kudos_buttons:
 
         try:
             kudos_button.click()
             print "Successfully Gave Kudos"
+            time.sleep(DELAY_AFTER_KUDOS_SEC)
             KUDOS_COUNT += 1
         except Exception, e:
             FAILED_COUNT += 1
@@ -218,7 +222,7 @@ def ScrollToBottomAndWaitForLoad(browser):
     """
 
     browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    time.sleep(3)
+    time.sleep(LOAD_TIME_SEC)
 
 
 def ScrollHalfWayAndWaitForLoad(browser):
@@ -228,7 +232,7 @@ def ScrollHalfWayAndWaitForLoad(browser):
     """
 
     browser.execute_script("window.scrollTo(0, document.body.scrollHeight / 2);")
-    time.sleep(3)
+    time.sleep(LOAD_TIME_SEC)
 
 
 if __name__ == '__main__':
